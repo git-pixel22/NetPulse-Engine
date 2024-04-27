@@ -1,16 +1,18 @@
 import asyncHandler from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
+import {User} from "../models/user.model.js"
 
 const registerUser = asyncHandler( async (req, res) => {
 
-    // get user details from frontend
+    // Get User Details From Frontend/Postman/CLI
+
     const {fullName, email, username, password } = req.body;
 
-    // validation - not empty
-    const fields = { fullName, email, username, password };
-    const errors = []; // contains the errors about missing fields
+    // Validation Of User Fields - Check If Empty
 
-    // validation - not empty
+    const fields = { fullName, email, username, password };
+    const errors = []; // an array that contains the errors about missing fields. For example - "fullName is required", if fullName is missing
+
     for (const [key, value] of Object.entries(fields)) {
         if (!value) {
             errors.push(`${key} is required`);
@@ -21,7 +23,16 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError("400", errors.join(', '));
     }
 
-    // check if user already exists: username, email
+    // Check If User Already Exists: Checking Username/Email
+    
+    const userExists = await User.findOne({
+        $or: [{username}, {email}]
+    })
+
+    if(userExists){
+        throw new ApiError(409,"User already exists")
+    }
+
     // check for images, check for avatar
     // upload them to cloudinary, check avatar again
     // create user object - create entry in db

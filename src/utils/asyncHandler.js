@@ -1,3 +1,4 @@
+// method 1
 const asyncHandler = (requestHandler) => {
     return (req, res, next) => {
         Promise.resolve(requestHandler(req, res, next)).
@@ -6,6 +7,16 @@ const asyncHandler = (requestHandler) => {
 }
 
 export default asyncHandler;
+
+// method 2
+// function asyncHandler(requestHandler) {
+    
+//     function newFunction(req, res, next) {
+//         Promise.resolve(requestHandler(req,res,next)).catch((error) => next(error))
+//     }
+
+//     return newFunction;
+// }
 
 // const asyncHandler = (fn) => async (req, res, next) => {
 //     try {
