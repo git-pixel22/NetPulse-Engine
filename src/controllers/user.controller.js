@@ -1,6 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
+import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -33,9 +34,28 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(409,"User already exists")
     }
 
-    // check for images, check for avatar
-    // upload them to cloudinary, check avatar again
-    // create user object - create entry in db
+    // Check For Images, Check For Avatar
+
+    const avatarLocalPath = req.files?.avatar[0]?.path
+    const coverImageLocalPath = req.files?.coverImage[0]?.path
+    console.log(req.files)
+
+    if (!avatarLocalPath) {
+        throw new ApiError(400, "Avatar File Is Required")
+    }
+
+    // Upload Images To Cloudinary, Check Avatar Again (Avatar Is A Required Field Remember)
+
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    console.log(avatar) //remove after checking
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+    if (!avatar) {
+        throw new ApiError(400, "Avatar File Is Required")
+    }
+
+    // Create User object - Create Entry In DB
+
     // remove password and refresh token field from response
     // check for user creation
     // returen response
