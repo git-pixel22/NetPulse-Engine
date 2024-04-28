@@ -1,7 +1,8 @@
-import asyncHandler from "../utils/asyncHandler.js"
-import {ApiError} from "../utils/ApiError.js"
-import {User} from "../models/user.model.js"
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
+import { ApiError } from "../utils/ApiError.js"
+import { User } from "../models/user.model.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -11,7 +12,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // Validation Of User Fields - Check If Empty
 
-    const fields = { fullName, email, username, password };
+    const fields = { username, email, fullName, password };
     const errors = []; // an array that contains the errors about missing fields. For example - "fullName is required", if fullName is missing
 
     for (const [key, value] of Object.entries(fields)) {
@@ -56,12 +57,35 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // Create User object - Create Entry In DB
 
-    // remove password and refresh token field from response
-    // check for user creation
-    // returen response
+    const user = await User.create({
+        username: username.toLowercase(),
+        email,
+        fullName,
+        password,
+        avatar: avatar.url,
+        coverImage: coverImage?.url || ""
+    })
 
-    console.log("email: ", email);
-    console.log("password: ", password);
+    // Remove Password And Refresh Token Field From Response
+
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    )
+
+    // Check For User Creation
+
+    if (!createdUser) {
+        throw new ApiError(500, "Somethhing went wrong while user registration")
+    }
+
+    // Return Response
+
+    return res.status(201).json(
+        new ApiResponse(200, createdUser, "User Registered Successfully")
+    )
+
+    // console.log("email: ", email);
+    // console.log("password: ", password);
 })
 
 export {registerUser}
