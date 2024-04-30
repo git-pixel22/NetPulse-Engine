@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
+import { upload } from "../middlewares/multer.middleware.js"
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -39,7 +40,6 @@ const registerUser = asyncHandler( async (req, res) => {
 
     const avatarLocalPath = req.files?.avatar[0]?.path
     const coverImageLocalPath = req.files?.coverImage[0]?.path
-    console.log(req.files)
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar File Is Required")
@@ -48,7 +48,6 @@ const registerUser = asyncHandler( async (req, res) => {
     // Upload Images To Cloudinary, Check Avatar Again (Avatar Is A Required Field Remember)
 
     const avatar = await uploadOnCloudinary(avatarLocalPath)
-    console.log(avatar) //remove after checking
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if (!avatar) {
@@ -58,14 +57,14 @@ const registerUser = asyncHandler( async (req, res) => {
     // Create User object - Create Entry In DB
 
     const user = await User.create({
-        username: username.toLowercase(),
+        username: username.toLowerCase(),
         email,
         fullName,
         password,
         avatar: avatar.url,
         coverImage: coverImage?.url || ""
     })
-
+    
     // Remove Password And Refresh Token Field From Response
 
     const createdUser = await User.findById(user._id).select(
@@ -83,9 +82,6 @@ const registerUser = asyncHandler( async (req, res) => {
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User Registered Successfully")
     )
-
-    // console.log("email: ", email);
-    // console.log("password: ", password);
 })
 
 export {registerUser}
