@@ -3,13 +3,15 @@ import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import { upload } from "../middlewares/multer.middleware.js"
+import fs from 'fs';
 
 const registerUser = asyncHandler( async (req, res) => {
 
     // Get User Details From Frontend/Postman/CLI
 
     const {fullName, email, username, password } = req.body;
+    const avatarLocalPath = req.files?.avatar?.[0]?.path;
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
 
     // Validation Of User Fields - Check If Empty
 
@@ -33,14 +35,20 @@ const registerUser = asyncHandler( async (req, res) => {
     })
 
     if(userExists){
+        
+        // Remove uploaded files if user already exists
+        if (avatarLocalPath) {
+            fs.unlinkSync(avatarLocalPath);
+        }
+        if (coverImageLocalPath) {
+            fs.unlinkSync(coverImageLocalPath);
+        }
+
         throw new ApiError(409,"User already exists")
-    }
+}
 
-    // Check For Images, Check For Avatar
-
-    const avatarLocalPath = req.files?.avatar?.[0]?.path
-    const coverImageLocalPath = req.files?.coverImage?.[0]?.path
-
+    // Check If The Image Exists In The Local Path
+    
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar File Is Required")
     }
@@ -51,7 +59,7 @@ const registerUser = asyncHandler( async (req, res) => {
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if (!avatar) {
-        throw new ApiError(400, "Avatar File Is Required")
+        throw new ApiError(500, "Something went wrong while uploading Avatar file. Please try again.")
     }
 
     // Create User object - Create Entry In DB
@@ -79,7 +87,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // Return Response
 
-    return res.status(201).json(
+    return res.status(200).json(
         new ApiResponse(200, createdUser, "User Registered Successfully")
     )
 })
