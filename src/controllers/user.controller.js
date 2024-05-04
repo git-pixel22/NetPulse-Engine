@@ -5,6 +5,24 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import fs from 'fs';
 
+const generateAccessAndRefreshToken = async (userId) => {
+
+    try {
+        const user = await User.findById(userId)
+
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave:false })
+
+        return {accessToken, refreshToken};
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating Access and Refresh Token");
+    }
+}
+
 const registerUser = asyncHandler( async (req, res) => {
 
     // Get User Details From Frontend/Postman/CLI
@@ -92,4 +110,72 @@ const registerUser = asyncHandler( async (req, res) => {
     )
 })
 
-export {registerUser}
+const loginUser = asyncHandler( async (req, res) => {
+
+    // Get User Details From Frontend/Postman/CLI
+
+    const {username, email, password} = req.body;
+
+    
+    // Validation Of User Fields - Check If Empty
+
+    if(!username || !email) {
+        throw new ApiResponse(400, "Missing Username or Email");
+    }
+
+    if(!password) {
+        throw new ApiResponse(400, "Missing Passsword");
+    }
+
+    
+    // Check If User Exists
+
+    const user = await User.findOne({
+        $or: [{username}, {email}]
+    })
+
+    if(!user) {
+        throw new ApiResponse(404, "Invalid Username or Email")
+    }
+
+    // Check If The Password Is Correct
+    
+    const isPasswordCorrect = await user.isPasswordCorrect(password);
+
+    if(!isPasswordCorrect) {
+        throw new ApiResponse(401, "Incorrect Credentials")
+    }
+
+    // Generate Access and Refresh Token
+
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id);
+
+    // Set Tokens As Cookie And Return Response 
+
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+    const options = {
+        httopOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user: loggedInUser, accessToken, refreshToken
+            },
+            "User Logged In!"
+        )
+    )
+
+})
+
+export {
+    registerUser,
+    loginUser
+}
