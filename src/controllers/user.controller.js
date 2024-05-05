@@ -175,7 +175,41 @@ const loginUser = asyncHandler( async (req, res) => {
 
 })
 
+const logoutUser = asyncHandler( async (req, res) => {
+    // Purge User's Access and Refresh Token Both From Browser And DB
+
+    //req.user comes from the auth middleware
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httopOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+        new ApiResponse(200, {}, "User Logged Out!")
+    )
+
+
+
+})
+
 export {
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 }
