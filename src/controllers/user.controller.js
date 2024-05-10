@@ -352,11 +352,11 @@ const updateAvatar = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Error While Uploading Avatar")
     }
 
-    const updatedAvatar = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
-                avatar
+                avatar: avatar.url
             }
         },
         {
@@ -367,7 +367,7 @@ const updateAvatar = asyncHandler( async (req, res) => {
     return res
     .status(200)
     .json(
-        new ApiResponse(200, updatedAvatar, "Avatar Image Updated Successfully!")
+        new ApiResponse(200, user, "Avatar Image Updated Successfully!")
     )
 })
 
@@ -385,11 +385,11 @@ const updateCoverImage = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Error While Uploading Cover Image")
     }
 
-    const updatedCoverImage = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
-                coverImage
+                coverImage: coverImage.url
             }
         },
         {
@@ -400,7 +400,7 @@ const updateCoverImage = asyncHandler( async (req, res) => {
     return res
     .status(200)
     .json(
-        new ApiResponse(200, updatedCoverImage, "Cover Image Updated Successfully!")
+        new ApiResponse(200, user, "Cover Image Updated Successfully!")
     )
 })
 
