@@ -193,8 +193,6 @@ const logoutUser = asyncHandler( async (req, res) => {
             new: true
         }
     );
-
-    console.log(updatedUser);
     
     if (!updatedUser) {
         throw new ApiError(500, "Failed to update refreshToken for the user");
@@ -262,11 +260,90 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
     
 })
 
+const changePassword = asyncHandler( async (req, res) => {
 
+    const {oldPassword, newPassword} = req.body;
+
+    const user = await User.findById(req.user?._id);
+
+    if(!user){
+        throw new ApiError(404, "User does not exist")
+    }
+
+    const passwordCheckResult = await user.isPasswordCorrect(oldPassword);
+
+    if(!passwordCheckResult){
+        throw new ApiError(400, "Invalid Password")
+    }
+
+    user.password = newPassword;
+
+    // We have a .pre() method in our model, that encrypts the password before the user is saved.
+    await user.save({validateBeforeSave: false})
+
+    // const updatedUserPassword = await User.findByIdAndUpdate(
+    //     user._id,
+    //     {
+    //         $set: {
+    //             password: newPassword
+    //         }
+    //     }
+    // );
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, {}, "Password Changed Successfully!")
+    )   
+})
+
+const getCurrentUser = asyncHandler( async (req, res) => {
+    
+    // const user = req.user;
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, req.user, "Current User Fetched Successfully!")
+    )
+})
+
+const updateAccountDetails = asyncHandler( async (req, res) => {
+
+    const {fullName, email} = req.body;
+    
+    if(!fullName || !email){
+        throw new ApiError(400, "All Fields Are Required")
+    }
+
+    // Here we're not using .save() as in changePassword controller, since we don't have the need to use .pre() hook defined in user model. The .pre() hook is mainly used in our code to hash the updated password before it is saved.
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                fullName,
+                email
+            }
+        },
+        {
+            new: true // returns the new information/object after update
+        }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, updatedUser, "User Details Updated!")
+    )    
+
+})
 
 export {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    changePassword,
+    getCurrentUser,
+    updateAccountDetails
 }
