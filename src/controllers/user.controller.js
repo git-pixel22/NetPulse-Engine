@@ -1,11 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { deleteOldImageOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import fs from 'fs';
 import jwt from "jsonwebtoken"
-
+import { v2 as cloudinary } from 'cloudinary'
 
 const generateAccessAndRefreshToken = async (userId) => {
 
@@ -310,6 +310,7 @@ const getCurrentUser = asyncHandler( async (req, res) => {
 
 const updateAccountDetails = asyncHandler( async (req, res) => {
 
+    // for example we are updating only fullName and Email here.
     const {fullName, email} = req.body;
     
     if(!fullName || !email){
@@ -352,6 +353,10 @@ const updateAvatar = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Error While Uploading Avatar")
     }
 
+    // Retrieve the current avatar URL from the user document
+    const currentUser = await User.findById(req.user?._id).select('avatar');
+    const oldAvatarUrl = currentUser.avatar;
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
@@ -363,6 +368,9 @@ const updateAvatar = asyncHandler( async (req, res) => {
             new: true
         }
     ).select("-password")
+
+
+    await deleteOldImageOnCloudinary(oldAvatarUrl);
 
     return res
     .status(200)
@@ -385,6 +393,10 @@ const updateCoverImage = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Error While Uploading Cover Image")
     }
 
+    // Retrieve the current avatar URL from the user document
+    const currentUser = await User.findById(req.user?._id).select('coverImage');
+    const oldCoverImageUrl = currentUser.coverImage;
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
@@ -396,6 +408,8 @@ const updateCoverImage = asyncHandler( async (req, res) => {
             new: true
         }
     ).select("-password")
+
+    await deleteOldImageOnCloudinary(oldCoverImageUrl);
 
     return res
     .status(200)
