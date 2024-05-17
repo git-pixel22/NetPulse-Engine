@@ -179,12 +179,12 @@ const loginUser = asyncHandler( async (req, res) => {
 
 const logoutUser = asyncHandler( async (req, res) => {
     // Purge User's Access and Refresh Token Both From Browser And DB
-    //req.user comes from the auth middleware
+    // req.user comes from the auth middleware
     const updatedUser = await User.findByIdAndUpdate(
         req.user._id,
         {
             $unset: {
-                refreshToken: ""
+                refreshToken: 1
             }
         },
         {
@@ -238,7 +238,7 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
     const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id);
 
     const options = {
-        httopOnly: true,
+        httpOnly: true,
         secure: true
     }
 

@@ -27,7 +27,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 }
 
 const deleteOldImageOnCloudinary = (imageUrl) => {
-    const publicIdMatch = imageUrl.match(/\/([^/]+)\.png$/);
+    const publicIdMatch = imageUrl.match(/\/([^/]+)\.(png|jpg)$/i);
     
     if (!publicIdMatch) {
         console.log("Pattern not found in URL.");
