@@ -26,7 +26,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 }
 
-const deleteOldImageOnCloudinary = (imageUrl) => {
+const deleteFromCloudinary = (imageUrl) => {
     const publicIdMatch = imageUrl.match(/\/([^/]+)\.(png|jpg)$/i);
     
     if (!publicIdMatch) {
@@ -51,4 +51,4 @@ const deleteOldImageOnCloudinary = (imageUrl) => {
 }
 
 
-export {uploadOnCloudinary, deleteOldImageOnCloudinary}
+export {uploadOnCloudinary, deleteFromCloudinary}
