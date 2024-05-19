@@ -8,11 +8,64 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
-    //TODO: get all videos based on query, sort, pagination
+    const { page = 1, limit = 10, query='', sortBy='createdAt', sortType, userId } = req.query
+    // TODO: get all videos based on query, sort, pagination
+    // select published videos
+    // query parameter will be looked into title or description
+    // sortBy will have 3 options - createdAt, views, duration
+    // sortType will have 2 options - ascending or descending
+
+    if (!query.trim()) {
+        throw new ApiError(400, "Missing search query");
+    }
+
+    if (sortType !== "asc" && sortType !== "desc") {
+        throw new ApiError(400, "Invalid sorting options: Must be 'asc' or 'desc'");
+    }
+
+    const allowedSortFields = ['createdAt', 'views', 'duration'];
+    if (!allowedSortFields.includes(sortBy)) {
+        throw new ApiError(400, `Invalid sorting field: Must be one of ${allowedSortFields.join(', ')}`);
+    }
+
+    // Define the sort object based on sortBy and sortType
+    const sortObj = { [sortBy]: sortType === 'asc' ? 1 : -1 };
+
+    // Construct the aggregation pipeline
+    const pipeline = [
+        {
+        $match: {
+            $or: [
+            { title: { $regex: query, $options: "i" } },
+            { description: { $regex: query, $options: "i" } }
+            ],
+            isPublished: true
+        }
+        },
+        { $sort: sortObj }
+    ];
+
+    // Options for pagination
+    const options = {
+        page: parseInt(page),
+        limit: parseInt(limit)
+    };
+
+    // Execute the aggregation pipeline with pagination
+    const result = await Video.aggregatePaginate(Video.aggregate(pipeline), options);
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, result, "Videos Fetched Successfully!")
+    )
+
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {
+
+    console.log("Entered publish a vide0");
+
     const { title, description} = req.body
     // TODO: get video, upload to cloudinary, create video
     const videoFilePath = req.files?.videoFile?.[0].path;
@@ -79,6 +132,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: get video by id
+    // watch history logic
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
