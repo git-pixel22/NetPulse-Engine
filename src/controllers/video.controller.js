@@ -64,9 +64,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
 
-    console.log("Entered publish a vide0");
-
-    const { title, description} = req.body
+    const { title, description} = req.body;
     // TODO: get video, upload to cloudinary, create video
     const videoFilePath = req.files?.videoFile?.[0].path;
     const thumbnailPath = req.files?.thumbnail?.[0].path;
@@ -114,7 +112,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
         description,
         duration: videoFile.duration,
         isPublished: true,
-        owner: req.user_id
+        owner: req.user
     })
 
     if (!video) {
@@ -131,8 +129,35 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    //TODO: get video by id
-    // watch history logic
+
+    if(!videoId.trim()) {
+        throw new ApiError(404, "Video Does Not Exist!")
+    }
+
+    const video = await Video.findById(videoId);
+
+    if(!video) {
+        throw new ApiError(404, "Video Does Not Exist!")
+    }
+
+    if(req.user) {
+        try {
+            // Find the user, and add the videoId to watch history of the user.
+            const user = await User.findById(req.user._id);
+            if (user) {
+                user.watchHistory.push(videoId);
+                await user.save({ validateBeforeSave: false });
+            }
+        } catch (error) {
+            throw new ApiError(500, "Failed to update watch history");
+        }
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, video, "Video Fetched Successfully!")
+    )
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
