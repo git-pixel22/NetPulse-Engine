@@ -130,7 +130,11 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
-    if(!videoId.trim()) {
+    if (!isValidObjectId(videoId)) {
+        throw new ApiError(400, "Video Does Not Exist")        
+    }
+
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
         throw new ApiError(404, "Video Does Not Exist!")
     }
 
@@ -170,15 +174,16 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
+        throw new ApiError(404, "Video Does Not Exist!")
+    }
+
     //TODO: update video details like title, description, thumbnail
     const {title, description} = req.body;
     const thumbnailLocalPath = req.file?.path
 
     // Check the paramaters
-
-    if(!videoId.trim()) {
-        throw new ApiError(400, "Video Not Found");
-    }
 
     const fields = { title, description};
     const errors = []; // an array that contains the errors about missing fields. For example - "title is required", if title is missing
@@ -235,8 +240,8 @@ const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
 
-    if(!videoId.trim()) {
-        throw new ApiError(400, "Video Not Found!");
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
+        throw new ApiError(404, "Video Does Not Exist!")
     }
 
     const deletedVideo = await Video.findByIdAndDelete(videoId);
@@ -255,8 +260,8 @@ const deleteVideo = asyncHandler(async (req, res) => {
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
-    if(!videoId.trim()) {
-        throw new ApiError(400, "Video Does Not Exist!");
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
+        throw new ApiError(404, "Video Does Not Exist!")
     }
 
     const video = await Video.findById(videoId);

@@ -7,11 +7,12 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 const getVideoComments = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
 
-    if (!videoId.trim()) {
-        throw new ApiError(400, "Video Does Not Exist");
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
+        throw new ApiError(404, "Video Does Not Exist!")
     }
+
+    const { page = 1, limit = 10 } = req.query;
 
     const options = {
         page: parseInt(page, 10),
@@ -77,15 +78,16 @@ const getVideoComments = asyncHandler(async (req, res) => {
 const addComment = asyncHandler(async (req, res) => {
     // TODO: add a comment to a video
     const {videoId} = req.params;
+
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
+        throw new ApiError(404, "Video Does Not Exist!")
+    }
+
     const owner = req.user;
     const {commentContent} = req.body;
 
     if(!owner) {
         throw new ApiError(401, "Invalid Access, You Might Need To Login In Again")
-    }
-
-    if(!videoId.trim()) {
-        throw new ApiError(400, "Video Does Not Exist")
     }
 
     if(!commentContent.trim()) {
@@ -115,9 +117,9 @@ const addComment = asyncHandler(async (req, res) => {
 const deleteComment = asyncHandler(async (req, res) => {
     // TODO: delete a comment
     const {commentId} = req.params;
-    
-    if(!commentId.trim()) {
-        throw new ApiError("Comment ID Missing");
+
+    if (!commentId.trim() || !isValidObjectId(commentId)) {
+        throw new ApiError(400, "Comment Does Not Exist")        
     }
 
     const commentDeleted = await Comment.findByIdAndDelete(commentId);
