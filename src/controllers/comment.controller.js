@@ -62,12 +62,11 @@ const getVideoComments = asyncHandler(async (req, res) => {
             options
         );
 
-        res.json({
-            comments: result.docs,
-            totalPages: result.totalPages,
-            currentPage: result.page,
-            totalComments: result.totalDocs
-        });
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, result, "Comments Fetched Successfully")
+        );
     } catch (error) {
         throw new ApiError(500, "Server Error");
     }
