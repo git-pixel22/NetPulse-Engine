@@ -9,7 +9,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     const {videoId} = req.params;
     const userId = req.user._id;
 
-    if(videoId.trim() || !isValidObjectId(videoId)) {
+    if(!videoId.trim() || !isValidObjectId(videoId)) {
         throw new ApiError("400", "Video Does Not Exist")
     }
     
@@ -121,11 +121,29 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
 })
 
-
-
 const getLikedVideos = asyncHandler(async (req, res) => {
-    //TODO: get all liked videos
-})
+    
+    const userId = req.user._id;
+
+
+    if (!userId.trim() ||!isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid User")
+    }
+       
+    try{
+        // Find all likes by the user where the video field is not null
+        const likedVideos = await Like.find({ 
+            likedBy: userId, 
+            video: { $ne: null } 
+        }).populate('video');
+
+        return res.status(200).json(
+            new ApiResponse(200, likedVideos, "Liked Videos Fetched")
+        );
+    } catch (error) {
+        throw new ApiError(500, "Unbale To Fetch Liked Videos")
+    }
+});
 
 export {
     toggleCommentLike,
