@@ -130,11 +130,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
-    if (!isValidObjectId(videoId)) {
-        throw new ApiError(400, "Video Does Not Exist")        
-    }
-
-    if(!videoId.trim() || !isValidObjectId(videoId)) {
+    if(!videoId || !videoId.trim() || !isValidObjectId(videoId)) {
         throw new ApiError(404, "Video Does Not Exist!")
     }
 
@@ -152,13 +148,22 @@ const getVideoById = asyncHandler(async (req, res) => {
         )
     }
 
+    // Increase video views
+    video = await Video.findByIdAndUpdate(
+        videoId,
+        {
+            $inc: { view: 1 },
+        },
+        { new: true }
+    )
+
     // Find the user, and add the videoId to watch history of the user.
     if (req.user) {
         try {
             await User.findByIdAndUpdate(
                 req.user._id,
                 { $push: { watchHistory: videoId } },
-                { new: true, validateBeforeSave: false } // `validateBeforeSave` option is used with `save`, not `update`.
+                { new: true }
             );
         } catch (error) {
             throw new ApiError(500, "Failed to update watch history");
