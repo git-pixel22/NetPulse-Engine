@@ -8,14 +8,14 @@ export const verifyJWT = asyncHandler( async(req, _res, next) => {
 
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer", "");
 
-    if (!token) {
+    if (!token || !token.trim()) {
         throw new ApiError(401, "Unauthorized Request");
     }
 
     // Decodes the JWT token to retrieve the payload generated during token creation using jwt.sign(). If the token is invalid, jwt.verify() throws an error.
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+    const user = await User.findById(decodedToken?._id).select("-password -refreshToken -watchHistory")
 
 
     // If no user is found with the decoded token's ID, it indicates an invalid access token.

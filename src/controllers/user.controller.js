@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
@@ -313,7 +314,7 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
     // for example we are updating only fullName and Email here.
     const {fullName, email} = req.body;
     
-    if(!fullName || !email){
+    if(!fullName || !fullName.trim() || !email || !email.trim()){
         throw new ApiError(400, "All Fields Are Required")
     }
 
@@ -367,7 +368,7 @@ const updateAvatar = asyncHandler( async (req, res) => {
         {
             new: true
         }
-    ).select("-password")
+    ).select("-password -refreshToken -watchHistory")
 
 
     await deleteFromCloudinary(oldAvatarUrl);
@@ -407,7 +408,7 @@ const updateCoverImage = asyncHandler( async (req, res) => {
         {
             new: true
         }
-    ).select("-password")
+    ).select("-password -refreshToken -watchHistory")
 
     await deleteFromCloudinary(oldCoverImageUrl);
 

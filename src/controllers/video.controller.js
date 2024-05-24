@@ -134,7 +134,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Video Does Not Exist!")
     }
 
-    const video = await Video.findById(videoId);
+    let video = await Video.findById(videoId);
 
     if(!video) {
         throw new ApiError(404, "Video Does Not Exist!")
@@ -186,7 +186,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
     //TODO: update video details like title, description, thumbnail
     const {title, description} = req.body;
-    const thumbnailLocalPath = req.file?.path
+    const thumbnailLocalPath = req.file?.path;
 
     // Check the paramaters
 

@@ -1,132 +1,99 @@
-import mongoose, {isValidObjectId} from "mongoose"
-import {Like} from "../models/like.model.js"
-import {ApiError} from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
-import {asyncHandler} from "../utils/asyncHandler.js"
+import mongoose, { isValidObjectId } from "mongoose";
+import { Video } from "../models/video.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Like } from './../models/like.model.js';
+import { Comment } from "../models/comment.model.js";
+import { Tweet } from "../models/tweet.model.js";
+
+
+const toggleLike = async (Model, resourceId, userId) => {
+
+    if (!isValidObjectId(resourceId)) throw new ApiError(400, "Invalid Resource Id")
+    if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid  UserId")
+
+    const resource = await Model.findById(resourceId);
+    if (!resource) throw new ApiError(404, "No Resource Found");
+
+    const resourceField = Model.modelName.toLowerCase();
+
+    const isLiked = await Like.findOne({ [resourceField]: resourceId, likedBy: userId })
+
+    var response;
+    try {
+        response = isLiked ?
+            await Like.deleteOne({ [resourceField]: resourceId, likedBy: userId }) :
+            await Like.create({ [resourceField]: resourceId, likedBy: userId })
+    } catch (error) {
+        console.error("toggleLike error ::", error);
+        throw new ApiError(500, error?.message || "Internal server error in toggleLike")
+    }
+
+    const totalLikes = await Like.countDocuments({ [resourceField]: resourceId });
+
+    return { response, isLiked, totalLikes };
+
+}
+
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
-    
-    const {videoId} = req.params;
-    const userId = req.user._id;
 
-    if(!videoId.trim() || !isValidObjectId(videoId)) {
-        throw new ApiError("400", "Video Does Not Exist")
-    }
-    
-    // Check if the video is already liked
-
-    const likedVideo = await Like.findOne({
-        video: videoId,
-        likedBy: userId
-    })
-
-    let likeStatus;
-
-    if(likedVideo) {
-        // Remove like from Video
-        await Like.findByIdAndDelete(likedVideo._id);
-        likeStatus = "Unliked";
-    } else {
-        // Add like to video
-        await Like.create({
-            video: videoId,
-            likedBy: userId
-        });
-        likeStatus = "Liked";
-    }
+    const { videoId } = req.params
+    const { response, isLiked, totalLikes } = await toggleLike(Video, videoId, req.user?._id);    
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, likeStatus, "Video's Like Status Toggled Successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {response,totalLikes},
+                isLiked === null ? "Liked Successfully" : "Removed Like Successfully"
+            )
+        )
 
-})
+});
+
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
-    
-    const {commentId} = req.params
-    const userId = req.user._id;
 
-    if(commentId.trim() || !isValidObjectId(commentId)) {
-        throw new ApiError("400", "Comment Does Not Exist")
-    }
-    
-    // Check if the video is already liked
-
-    const likedComment = await Like.findOne({
-        comment: commentId,
-        likedBy: userId
-    })
-
-    let likeStatus;
-
-    if(likedComment) {
-        // Remove like from Video
-        await Like.findByIdAndDelete(likedComment._id);
-        likeStatus = "Unliked";
-    } else {
-        // Add like to video
-        await Like.create({
-            comment: commentId,
-            likedBy: userId
-        });
-        likeStatus = "Liked";
-    }
+    const { commentId } = req.params;
+    const { response, isLiked, totalLikes } = await toggleLike(Comment, commentId, req.user?._id);
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, likeStatus, "Comment's Like Status Toggled Successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {response,totalLikes},
+                isLiked === null ? "Liked Successfully" : "Removed Like Successfully"
+            )
+        )
 
 })
 
-const toggleTweetLike = asyncHandler(async (req, res) => { 
 
-    const {tweetId} = req.params
-    const userId = req.user._id;
+const toggleTweetLike = asyncHandler(async (req, res) => {
 
-    if(!tweetId.trim() || !isValidObjectId(tweetId)) {
-        throw new ApiError("400", "Tweet Does Not Exist")
-    }
-    
-    // Check if the video is already liked
-
-    const likedComment = await Like.findOne({
-        tweet: tweetId,
-        likedBy: userId
-    })
-
-    let likeStatus;
-
-    if(likedTweet) {
-        // Remove like from Video
-        await Like.findByIdAndDelete(likedTweet._id);
-        likeStatus = "Unliked";
-    } else {
-        // Add like to video
-        await Like.create({
-            tweet: tweetId,
-            likedBy: userId
-        });
-        likeStatus = "Liked";
-    }
+    const { tweetId } = req.params;
+    const { response, isLiked, totalLikes } = await toggleLike(Tweet, tweetId, req.user?._id);
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, likeStatus, "Tweet's Like Status Toggled Successfully")
-    )
-
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {response,totalLikes},
+                isLiked === null ? "Liked Successfully" : "Removed Like Successfully"
+            )
+        )
 })
+
 
 const getLikedVideos = asyncHandler(async (req, res) => {
     
     const userId = req.user._id;
-
-
-    if (!userId.trim() ||!isValidObjectId(userId)) {
+    if (!isValidObjectId(userId)) {
         throw new ApiError(400, "Invalid User")
     }
        
@@ -145,9 +112,10 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     }
 });
 
+
 export {
+    toggleVideoLike,
     toggleCommentLike,
     toggleTweetLike,
-    toggleVideoLike,
     getLikedVideos
 }

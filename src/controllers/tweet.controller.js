@@ -34,7 +34,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
     // TODO: get user tweets
     const {userId} = req.params;
 
-    if(!userId.trim() || !isValidObjectId(userId)) {
+    if(!userId|| !userId.trim() || !isValidObjectId(userId)) {
         throw new ApiError(400, "Invalid User ID");
     }
 
@@ -62,10 +62,11 @@ const getUserTweets = asyncHandler(async (req, res) => {
             Tweet.aggregate(aggregationPipeline), 
             options
         );
+
         return res
         .status(200)
         .json(
-            new ApiResponse(200, result, "Comments Fetched Successfully")
+            new ApiResponse(200, result, "Tweets Fetched Successfully")
         );
     } catch (error) {
         throw new ApiError(500, "Server Error");
