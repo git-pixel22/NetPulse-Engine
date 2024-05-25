@@ -1,8 +1,8 @@
-# NetPulse Engine
+# NetPulse Engine :ringed_planet: 
 
 NetPulse Engine is a comprehensive backend system integrating functionalities of video streaming platforms and social media, ideal for platforms combining video sharing and micro-blogging.
 
-Key Features
+# Key Features :star: 
 - Video Management: Seamless video streaming, uploading, and management integration akin to YouTube.
 - Micro-blogging: Twitter-like capabilities including posting tweets, following users, and engaging with content.
 - User Authentication: Secure user authentication and authorization using JWT.
@@ -14,7 +14,7 @@ Key Features
 
 Explore the project's [data models](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj) to delve deeper into its architectural design and schema.
 
-# Installation
+# Installation 📀
 
 1. Clone the repository.
 ```
@@ -39,7 +39,7 @@ CLOUDINARY_CLOUD_NAME=<your-cloud-name>
 CLOUDINARY_API_KEY=<your-cloudinary-key>
 CLOUDINARY_API_SECRET=<your-cloudinary-secret>
 ```
-# Running the Application
+# Running the Application 🏃
 ```
 npm run dev
 ```
