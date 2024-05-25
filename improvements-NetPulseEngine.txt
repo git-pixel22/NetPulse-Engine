@@ -1,0 +1,5 @@
+- Remove the video ID from the user's watch history when the video is deleted.
+- Optimize the retrieval of the watch history by directly fetching it without recalculating aggregates each time. It can be done by pre-existing functionalities of addition and removal of videos in the watch history through the video controller.
+- Restrict the ability to add comments to videos that are unpublished.
+- Implement a check to ensure a video is not added to a playlist multiple times.
+- Enhance the response format when fetching subscribed channels.
