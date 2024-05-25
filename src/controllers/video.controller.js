@@ -152,7 +152,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     video = await Video.findByIdAndUpdate(
         videoId,
         {
-            $inc: { view: 1 },
+            $inc: { views: 1 },
         },
         { new: true }
     )
@@ -169,6 +169,8 @@ const getVideoById = asyncHandler(async (req, res) => {
             throw new ApiError(500, "Failed to update watch history");
         }
     }
+
+    console.log("Video = ", video);
 
     return res
     .status(200)
