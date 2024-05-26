@@ -1,0 +1,1080 @@
+{
+	"info": {
+		"_postman_id": "51097a44-e046-4350-a47e-2d2305f0adb9",
+		"name": "NetPulseEngine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34381088"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fullName",
+									"value": "pixel24",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "pixel24",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "pixel24@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pixel24",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/notafk-rajat/projects/pixelspace/images/green.png"
+								},
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "/home/notafk-rajat/Downloads/rocket-car.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/users/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>User ID</th>",
+									"        <th>Username</th>",
+									"        <th>Email</th>",
+									"        <th>Full Name</th>",
+									"        <th>Avatar</th>",
+									"        <th>Cover Image</th>",
+									"        <th>Created At</th>",
+									"        <th>Updated At</th>",
+									"        <th>Access Token</th>",
+									"        <th>Refresh Token</th>",
+									"    </tr>",
+									"    <tr>",
+									"        <td>{{response.data.user._id}}</td>",
+									"        <td>{{response.data.user.username}}</td>",
+									"        <td>{{response.data.user.email}}</td>",
+									"        <td>{{response.data.user.fullName}}</td>",
+									"        <td>{{response.data.user.avatar}}</td>",
+									"        <td>{{response.data.user.coverImage}}</td>",
+									"        <td>{{response.data.user.createdAt}}</td>",
+									"        <td>{{response.data.user.updatedAt}}</td>",
+									"        <td>{{response.data.accessToken}}</td>",
+									"        <td>{{response.data.refreshToken}}</td>",
+									"    </tr>",
+									"</table>",
+									"`;",
+									"",
+									"function constructVisualizerPayload() {",
+									"    return { response: pm.response.json() }",
+									"}",
+									"",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"pixel22\",\n    \"password\": \"pixel22\",\n    \"email\": \"pixel22@email.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refreshAccessToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/refresh-token",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change-password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"PIXEL22\",\n    \"newPassword\": \"pixel22\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/change-password",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "current-user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/current-user",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"current-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-account-details",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"pixel22\",\n    \"email\": \"pixel22@email.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/users/update-account-details",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"update-account-details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-avatar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/notafk-rajat/projects/pixelspace/images/green.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/users/update-avatar",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"update-avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-coverImage",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "/home/notafk-rajat/Downloads/rocket-car.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/users/update-coverImage",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"update-coverImage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserChannel-Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/users/c/pixel22",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"c",
+								"pixel22"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "watch-history",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/users/watch-history",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"watch-history"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "video",
+			"item": [
+				{
+					"name": "publishAVideo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Builders I Admire | Pixel22 [2]",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "A video of builders I admire. [2]",
+									"type": "text"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/home/notafk-rajat/Downloads/rocket-car.png"
+								},
+								{
+									"key": "videoFile",
+									"type": "file",
+									"src": "/home/notafk-rajat/Downloads/letmecook.mp4"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/videos/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllVideos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/videos/?query=builders&sortType=asc",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								""
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "builders"
+								},
+								{
+									"key": "sortType",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getVideoById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/videos/6650df9cf1a762a1ddcaaa54",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								"6650df9cf1a762a1ddcaaa54"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateVideo",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Builders I Admire | By Pixel",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "A video of builders admired by me.",
+									"type": "text"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/home/notafk-rajat/Downloads/rocket-car.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/videos/6650db40ef819286a837c9fa",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								"6650db40ef819286a837c9fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteVideo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/videos/6650db40ef819286a837c9fa",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								"6650db40ef819286a837c9fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "togglePublishStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/videos/toggle/publish/6650dfbff1a762a1ddcaaa57",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"videos",
+								"toggle",
+								"publish",
+								"6650dfbff1a762a1ddcaaa57"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "addComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"commentContent\": \"This another sample comment for testing purpose.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/comments/6650dfbff1a762a1ddcaaa57",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comments",
+								"6650dfbff1a762a1ddcaaa57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getComments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/comments/6650dfbff1a762a1ddcaaa57",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comments",
+								"6650dfbff1a762a1ddcaaa57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteComment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/comments/c/6650ee5ff1a762a1ddcaaa79",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comments",
+								"c",
+								"6650ee5ff1a762a1ddcaaa79"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "like",
+			"item": [
+				{
+					"name": "toggleVideoLike",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/likes/toggle/v/6650edb6f1a762a1ddcaaa67",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"likes",
+								"toggle",
+								"v",
+								"6650edb6f1a762a1ddcaaa67"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggleCommentLike",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/likes/toggle/c/6650ee40f1a762a1ddcaaa73",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"likes",
+								"toggle",
+								"c",
+								"6650ee40f1a762a1ddcaaa73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggleTweetLike",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/likes/toggle/t/6650fbe6346a2ca8ba348697",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"likes",
+								"toggle",
+								"t",
+								"6650fbe6346a2ca8ba348697"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLikedVideos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/likes/videos",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"likes",
+								"videos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tweet",
+			"item": [
+				{
+					"name": "createTweet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is an example Tweet.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/tweets/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"tweets",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserTweet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/tweets/user/66507c0c378eb13da4e7c741",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"tweets",
+								"user",
+								"66507c0c378eb13da4e7c741"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteTweet",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/tweets/664c94f98017bdddb6e90d6b",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"tweets",
+								"664c94f98017bdddb6e90d6b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "playlist",
+			"item": [
+				{
+					"name": "createPlaylist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Phonk Music\",\n    \"description\": \"A playlist of phonk music.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/playlist/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlaylistByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/665194f08bcd7ec7ee099497",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"665194f08bcd7ec7ee099497"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserPlaylists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/user/66507c0c378eb13da4e7c741",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"user",
+								"66507c0c378eb13da4e7c741"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePlaylist",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Phonk Playlist Revamped\",\n    \"description\": \"The phonk playlist has been revamped.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/playlist/665194f08bcd7ec7ee099497",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"665194f08bcd7ec7ee099497"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlaylist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/665194f08bcd7ec7ee099497",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"665194f08bcd7ec7ee099497"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addVideoToPlaylist",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/add/6650df9cf1a762a1ddcaaa54/665194f08bcd7ec7ee099497",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"add",
+								"6650df9cf1a762a1ddcaaa54",
+								"665194f08bcd7ec7ee099497"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeVideoFromPlaylist",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/remove/6650df9cf1a762a1ddcaaa54/665194f08bcd7ec7ee099497",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"remove",
+								"6650df9cf1a762a1ddcaaa54",
+								"665194f08bcd7ec7ee099497"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "subscription",
+			"item": [
+				{
+					"name": "toggleSubscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subscriptions/c/66507c0c378eb13da4e7c741",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subscriptions",
+								"c",
+								"66507c0c378eb13da4e7c741"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSubscribedChannel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subscriptions/c/66507c0c378eb13da4e7c741",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subscriptions",
+								"c",
+								"66507c0c378eb13da4e7c741"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserChannelSubscriber",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subscriptions/u/66473433ad556bef6b5d1269",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subscriptions",
+								"u",
+								"66473433ad556bef6b5d1269"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "getChannelStats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/dashboard/stats",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"dashboard",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getChannelVideos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/dashboard/videos",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"dashboard",
+								"videos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "healthCheck",
+			"item": [
+				{
+					"name": "healthcheck",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/healthcheck",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"healthcheck"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
