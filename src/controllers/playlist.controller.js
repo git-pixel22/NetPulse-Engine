@@ -22,7 +22,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid User")
     }
 
-    const createdPlaylist = Playlist.create(
+    const createdPlaylist = await Playlist.create(
         {
             name,
             description,

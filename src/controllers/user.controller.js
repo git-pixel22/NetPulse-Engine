@@ -157,7 +157,7 @@ const loginUser = asyncHandler( async (req, res) => {
 
     // Set Tokens As Cookie And Return Response 
 
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken -watchHistory")
 
     const options = {
         httpOnly: true,
@@ -330,7 +330,7 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
         {
             new: true // returns the new information/object after update
         }
-    ).select("-password")
+    ).select("-password -refreshToken -watchHistory")
 
     return res
     .status(200)
