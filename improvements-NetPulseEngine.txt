@@ -3,3 +3,4 @@
 - Restrict the ability to add comments to videos that are unpublished.
 - Implement a check to ensure a video is not added to a playlist multiple times.
 - Enhance the response format when fetching subscribed channels.
+- Ensure that the Like document associted with deleted videos, tweets, and comments are removed from the Like collections to make sure a deleted resource is not liked by the user.
