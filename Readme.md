@@ -11,10 +11,9 @@ NetPulse Engine is a comprehensive backend system integrating functionalities of
 - User Authentication: Secure user authentication and authorization using JWT.
 - User Profiles: Profile creation and customization.
 - Subscriptions: System for following channels.
-- Playlists: Create and manage playlists, add or remove videos.
+- Playlists: Create and manage playlists and add or remove videos.
 - Comments and Likes: Engage with videos and posts through comments and likes.
 - Robust API: RESTful API endpoints for all core functionalities.
-
 
 
 # Installation 📀
@@ -48,3 +47,7 @@ npm run dev
 ```
 
 Feel free to use this in any of your FrontEnd projects/builds, and to ping me if you find any issues using this. : )
+
+# Credits
+
+I was able to learn all this amazing stuff because of [Hitesh Choudhary](https://x.com/Hiteshdotcom), and his [backend series](https://www.youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW) on YouTube. He did an amazing job by not spoon-feeding things and teaching just enough so that a person can learn and build on his own.
