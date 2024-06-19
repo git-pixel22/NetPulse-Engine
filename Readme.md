@@ -48,6 +48,6 @@ npm run dev
 
 Feel free to use this in any of your FrontEnd projects/builds, and to ping me if you find any issues using this. : )
 
-# Credits
+# Credits 🧑‍🏫
 
 I was able to learn all this amazing stuff because of [Hitesh Choudhary](https://x.com/Hiteshdotcom), and his [backend series](https://www.youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW) on YouTube. He did an amazing job by not spoon-feeding things and teaching just enough so that a person can learn and build on his own.
