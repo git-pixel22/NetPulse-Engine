@@ -1,6 +1,6 @@
 # NetPulse Engine :ringed_planet: 
 
-NetPulse Engine is a comprehensive backend system integrating functionalities of video streaming platforms and social media, ideal for platforms combining video sharing and micro-blogging.
+[NetPulse-Engine](https://www.youtube.com/watch?v=i2h7YBox5JQ) is a comprehensive backend system integrating functionalities of video streaming platforms and social media, ideal for platforms combining video sharing and micro-blogging.
 
 - [API Documentation](https://documenter.getpostman.com/view/34381088/2sA3Qwb9v5)
 - Explore the project's [data models](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj) to delve deeper into its architectural design and schema.
